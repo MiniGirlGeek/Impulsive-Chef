@@ -19,11 +19,12 @@ potTop.pos = 500, 511.5
 binInside.pos = 98.5, 440.705
 binTop.pos = 143.487, 453.034
 
-WIDTH = 800
+WIDTH = 652
 HEIGHT = 600
-MAX_SPEED = 10
+MAX_SPEED = 20
 
-speed = 3
+speed = 5
+appleCount = 0
 
 appleType = apple
 
@@ -40,7 +41,7 @@ def close_bin():
 
 def choose_apple():
     number = randint(1, 10)
-    if number <= 8:
+    if number <= 9:
         appleType = badApple
     else:
         appleType = apple
@@ -48,6 +49,8 @@ def choose_apple():
 
 def draw():
     screen.fill((237, 174, 0))
+    appleName = ' apple' if appleCount == 1 else ' apples'
+    screen.draw.text('You have\n' + str(appleCount) + appleName + '!', midtop=(326.067, 80.169), fontname="intuitive", fontsize=50)
     clock_img.draw()
     pot.draw()
     #bin.draw()
@@ -57,21 +60,23 @@ def draw():
     binTop.draw()
 
 def on_mouse_down(pos):
-    if appleType.collidepoint(pos):
-        open_bin()
-        def drop_in_bin():
-            animate(appleType, duration=0.5,on_finished=close_bin, pos=(97.059, 575))
-        animate(appleType, duration=0.5,on_finished=drop_in_bin, pos=(97.059, 326.068))
-    else:
-        print("You missed me!")
+    open_bin()
+    def drop_in_bin():
+        animate(appleType, duration=0.2,on_finished=close_bin, pos=(97.059, 575))
+    animate(appleType, duration=0.2,on_finished=drop_in_bin, pos=(97.059, 326.068))
+
 
 def update():
+    global appleCount
     global appleType
     global speed
     appleType.bottom += speed
     if appleType.bottom >= 575:
+        if appleType.pos[0] == 499.5:
+            appleCount += 1
+        elif appleType.pos[0] == 508.0:
+            appleCount -= 1
         appleType.bottom = -100
         appleType = choose_apple()
         if speed < MAX_SPEED:
             speed = speed * 1.08
-        print(speed)
