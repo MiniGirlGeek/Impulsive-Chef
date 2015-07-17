@@ -2,7 +2,6 @@ from random import randint
 import csv, time
 
 NAME = input('Tell me your name, or else!: ')
-
 pot = Actor('cooking-pot')
 bin = Actor('closed-bin')
 clock_img = Actor('clock')
@@ -78,7 +77,10 @@ def draw():
     else:
         screen.fill((237, 174, 0))
         appleName = ' apple' if appleCount == 1 else ' apples'
-        screen.draw.text('You have\n' + str(appleCount) + appleName + '!', midtop=(326.067, 80.169), fontname="intuitive", fontsize=50)
+        try:
+            screen.draw.text('You have\n' + str(appleCount) + appleName + '!', midtop=(326.067, 80.169), fontname="intuitive", fontsize=50)
+        except:
+            pass
         clock_img.draw()
         pot.draw()
         #bin.draw()
@@ -115,11 +117,17 @@ def update():
                 appleCount += 1
                 row['Apple\'s Speed'] = speed
                 row['Location'] = 'Pot'
+                sounds.splash.play()
+                writer.writerow(row)
+                row = {'Time Apple Generated':'', 'Time Of Click':'', 'Apple Type':'', 'Location':'', 'Apple\'s Speed':'', 'Reaction Time':'', 'Error Type':''}
             elif appleType.pos[0] == 508.0:
                 appleCount -= 1
                 row['Error Type'] = 'didn\'t click'
-            writer.writerow(row)
-            row = {'Time Apple Generated':'', 'Time Of Click':'', 'Apple Type':'', 'Location':'', 'Apple\'s Speed':'', 'Reaction Time':'', 'Error Type':''}
+                sounds.splash.play()
+                writer.writerow(row)
+                row = {'Time Apple Generated':'', 'Time Of Click':'', 'Apple Type':'', 'Location':'', 'Apple\'s Speed':'', 'Reaction Time':'', 'Error Type':''}
+            else:
+                sounds.clang.play()
             appleType.bottom = -100
             appleType = choose_apple()
             if speed < MAX_SPEED:
