@@ -77,10 +77,7 @@ def draw():
     else:
         screen.fill((237, 174, 0))
         appleName = ' apple' if appleCount == 1 else ' apples'
-        try:
-            screen.draw.text('You have\n' + str(appleCount) + appleName + '!', midtop=(326.067, 80.169), fontname="intuitive", fontsize=50)
-        except:
-            pass
+        screen.draw.text('You have\n' + str(appleCount) + appleName + '!', midtop=(326.067, 80.169), fontname="intuitive", fontsize=50)
         clock_img.draw()
         pot.draw()
         #bin.draw()
@@ -100,7 +97,11 @@ def on_mouse_down(pos):
         row['Location'] = 'Bin'
         if appleType == apple:
             row['Error Type'] = 'clicked'
-        row['Reaction Time'] = row['Time Of Click'] - row['Time Apple Generated']
+        try:
+            row['Reaction Time'] = row['Time Of Click'] - row['Time Apple Generated']
+        except:
+            pass
+
         writer.writerow(row)
         row = {'Time Apple Generated':'', 'Time Of Click':'', 'Apple Type':'', 'Location':'', 'Apple\'s Speed':'', 'Reaction Time':'', 'Error Type':''}
 
